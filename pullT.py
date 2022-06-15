@@ -15,8 +15,11 @@ from operator import itemgetter
 
 ''' read mesh and element conn '''
 
-mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
-var = input('Enter name of variable (zeta): ')
+# mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
+mesh = "C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
+       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.63.nc"
+# var = input('Enter name of variable (zeta): ')
+var = 'zeta'
 
 t0 = time.time()
 
@@ -34,10 +37,11 @@ nodes = np.column_stack((xnode, ynode))
 
 ## read station list
 ## text file format: StationName Latitude Longgitude
-station = input("Enter name of station file (Stations.txt): ")
+# station = input("Enter name of station file (Stations.txt): ")
+station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations.txt"
 stat_list = []
 with open(station, 'r') as f_st:
-    f_st.readline()
+    #f_st.readline()
     for line in f_st:
         m = line.split()
         stat_list.append([float(m[1]), float(m[2])])  # add lat and long to list
@@ -102,7 +106,7 @@ for s in range(len(stat_list)):
     n0, n1, n2 = ADJ[s]
     S = []
     for t in range(nt):
-        mval = G0 * var[t][n0] + G1 * var[t][n1] + G2 * var[t][n2]
+        mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
         print(t, s, mval)
         S.append(mval)
     Stat_val.append(S)
