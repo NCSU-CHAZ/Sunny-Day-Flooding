@@ -6,13 +6,11 @@ Edited on Tue Oct 15 12:37:14 2019
 @author: agharag
 """
 
-# from tkinter.filedialog import askopenfilename
 from netCDF4 import Dataset
 import numpy as np
 import time
 from scipy import spatial
 from operator import itemgetter
-import sys
 
 ''' read mesh and element conn '''
 
@@ -105,7 +103,6 @@ for i in range(len(stat_list)):
             print('Sum of G0 + G1 + G2 = {}'.format(Gtot_min))
             GAMMA[i] = [G0, G1, G2]
             ADJ[i] = adjc
-
 
 t4 = time.time()
 print(' ***** found exact element and weight function in ', round(t4 - t3, 3), 's')
