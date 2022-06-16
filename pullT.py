@@ -12,6 +12,7 @@ import numpy as np
 import time
 from scipy import spatial
 from operator import itemgetter
+import sys
 
 ''' read mesh and element conn '''
 
@@ -40,11 +41,13 @@ nodes = np.column_stack((xnode, ynode))
 # station = input("Enter name of station file (Stations.txt): ")
 station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations.txt"
 stat_list = []
+stat_names = []
 with open(station, 'r') as f_st:
     #f_st.readline()
     for line in f_st:
         m = line.split()
         stat_list.append([float(m[1]), float(m[2])])  # add lat and long to list
+        stat_names.append(m[0])
 
 ''' find nearest triangles'''
 t2 = time.time()
@@ -69,6 +72,9 @@ GAMMA = []
 ADJ = []
 for i in range(len(stat_list)):
     xp, yp = stat_list[i]
+    print(stat_names[i])
+
+    Gtot_min = 100 # initialize value for Gtot error check
     for j in triangles[i]:
         adjc = elem[j] - 1
         XX = [xp, xnode[adjc[0]], xnode[adjc[1]], xnode[adjc[2]]]
@@ -88,13 +94,25 @@ for i in range(len(stat_list)):
         G0 = Sub_Area(0, 2, 3) / Tot_A
         G1 = Sub_Area(1, 0, 3) / Tot_A
         G2 = Sub_Area(1, 2, 0) / Tot_A
+        Gtot = G0 + G1 + G2
+        Error_Gtot = abs(Gtot - 1)
+        Error_Gtot_min = abs(Gtot_min - 1)
 
-        if round(G0 + G1 + G2, 3) == 1.0:
-            print(G0 + G1 + G2)
-            GAMMA.append([G0, G1, G2])
-            ADJ.append(adjc)
+        if Error_Gtot < Error_Gtot_min:
+            Gtot_min = Gtot
+            print(Gtot)
 
-            break
+        #if Gtot > 0.9 and Gtot < 1.1: # tweak these values to set G match parameters
+         #   print(G0 + G1 + G2)
+          #  GAMMA.append([G0, G1, G2])
+           # print(GAMMA)
+            #ADJ.append(adjc)
+            #break
+        #else:
+            #print('No match found within Gtot bounds'
+                  #'Expand Gtot range for match')
+            #print(Gtot)
+            #sys.exit()
 
 t4 = time.time()
 print(' ***** found exact element and weight function in ', round(t4 - t3, 3), 's')
@@ -105,6 +123,7 @@ for s in range(len(stat_list)):
     G0, G1, G2 = GAMMA[s]
     n0, n1, n2 = ADJ[s]
     S = []
+    print(stat_names[s])
     for t in range(nt):
         mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
         print(t, s, mval)
