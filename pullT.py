@@ -71,6 +71,8 @@ print(' ***** found nearby elements in ', round(t3 - t2, 3), 's')
 GAMMA = []
 ADJ = []
 for i in range(len(stat_list)):
+    GAMMA.append(0)
+    ADJ.append(0) # we will assign these values later
     xp, yp = stat_list[i]
     print(stat_names[i])
 
@@ -100,22 +102,14 @@ for i in range(len(stat_list)):
 
         if Error_Gtot < Error_Gtot_min:
             Gtot_min = Gtot
-            print(Gtot)
+            print('Sum of G0 + G1 + G2 = {}'.format(Gtot_min))
+            GAMMA[i] = [G0, G1, G2]
+            ADJ[i] = adjc
 
-        #if Gtot > 0.9 and Gtot < 1.1: # tweak these values to set G match parameters
-         #   print(G0 + G1 + G2)
-          #  GAMMA.append([G0, G1, G2])
-           # print(GAMMA)
-            #ADJ.append(adjc)
-            #break
-        #else:
-            #print('No match found within Gtot bounds'
-                  #'Expand Gtot range for match')
-            #print(Gtot)
-            #sys.exit()
 
 t4 = time.time()
 print(' ***** found exact element and weight function in ', round(t4 - t3, 3), 's')
+print("Gamma weighting array is {}".format(GAMMA))
 
 Stat_val = []
 ## output data
@@ -126,6 +120,7 @@ for s in range(len(stat_list)):
     print(stat_names[s])
     for t in range(nt):
         mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
+        mval = mval/(G0 + G1 + G2) # adjust for weighting coefficients where G0+G1+G2 not exactly equal to zero
         print(t, s, mval)
         S.append(mval)
     Stat_val.append(S)
