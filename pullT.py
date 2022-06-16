@@ -104,9 +104,12 @@ for i in range(len(stat_list)):
             GAMMA[i] = [G0, G1, G2]
             ADJ[i] = adjc
 
+
 t4 = time.time()
 print(' ***** found exact element and weight function in ', round(t4 - t3, 3), 's')
 print("Gamma weighting array is {}".format(GAMMA))
+
+
 
 Stat_val = []
 ## output data
@@ -124,3 +127,6 @@ for s in range(len(stat_list)):
 
 t5 = time.time()
 print(' ***** output ', round(t5 - t4, 3), 's')
+
+for i in range(len(stat_list)):
+    print('Nodes nearest {} station are {}'.format(stat_names[i], ADJ[i]))
