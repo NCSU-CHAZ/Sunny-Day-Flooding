@@ -37,7 +37,7 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = input("Enter name of station file (Stations.txt): ")
-station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations.txt"
+station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_bump.txt"
 stat_list = []
 stat_names = []
 with open(station, 'r') as f_st:
