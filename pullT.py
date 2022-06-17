@@ -71,10 +71,10 @@ ADJ = []
 for i in range(len(stat_list)):
     GAMMA.append(0)
     ADJ.append(0) # we will assign these values later
+    Gtot_min = 100 # initialize value for Gtot error check
     xp, yp = stat_list[i]
     print(stat_names[i])
 
-    Gtot_min = 100 # initialize value for Gtot error check
     for j in triangles[i]:
         adjc = elem[j] - 1
         XX = [xp, xnode[adjc[0]], xnode[adjc[1]], xnode[adjc[2]]]
@@ -114,16 +114,17 @@ print("Gamma weighting array is {}".format(GAMMA))
 Stat_val = []
 ## output data
 for s in range(len(stat_list)):
-    G0, G1, G2 = GAMMA[s]
-    n0, n1, n2 = ADJ[s]
-    S = []
-    print(stat_names[s])
-    for t in range(nt):
-        mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
-        mval = mval/(G0 + G1 + G2) # adjust for weighting coefficients where G0+G1+G2 not exactly equal to zero
-        print(t, s, mval)
-        S.append(mval)
-    Stat_val.append(S)
+    with open("C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
+                   "/CarolinaBeach/Model_Inputs/ModelOutText/pullT_{}.txt".format(stat_names[s]), 'w',) as outFile:
+        G0, G1, G2 = GAMMA[s]
+        n0, n1, n2 = ADJ[s]
+        S = []
+        for t in range(nt):
+            mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
+            mval = mval/(G0 + G1 + G2) # adjust for weighting coefficients where G0+G1+G2 not exactly equal to zero
+            outFile.write("{} {}\n".format(t, mval))
+            S.append(mval)
+        Stat_val.append(S)
 
 t5 = time.time()
 print(' ***** output ', round(t5 - t4, 3), 's')
