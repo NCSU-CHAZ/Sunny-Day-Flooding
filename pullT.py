@@ -16,9 +16,9 @@ from operator import itemgetter
 
 # mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
 mesh = "C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
-       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.63.nc"
+       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc"
 # var = input('Enter name of variable (zeta): ')
-var = 'zeta'
+var_name = 'windy'
 
 t0 = time.time()
 
@@ -26,7 +26,7 @@ ncf = Dataset(mesh, 'r')
 elem = ncf.variables['element'][:]
 xnode = ncf.variables['x'][:]
 ynode = ncf.variables['y'][:]
-var = ncf.variables[var][:]
+var = ncf.variables[var_name][:]
 N_ele = elem.shape[0]
 nt = var.shape[0]
 N_nod = len(xnode)
@@ -37,7 +37,7 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = input("Enter name of station file (Stations.txt): ")
-station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_bump.txt"
+station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_Wright.txt"
 stat_list = []
 stat_names = []
 with open(station, 'r') as f_st:
@@ -115,7 +115,7 @@ Stat_val = []
 ## output data
 for s in range(len(stat_list)):
     with open("C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
-                   "/CarolinaBeach/Model_Inputs/ModelOutText/pullT_{}.txt".format(stat_names[s]), 'w',) as outFile:
+                   "/CarolinaBeach/Model_Inputs/ModelOutText/pullT_{}_{}.txt".format(stat_names[s],var_name), 'w',) as outFile:
         G0, G1, G2 = GAMMA[s]
         n0, n1, n2 = ADJ[s]
         S = []
