@@ -18,7 +18,7 @@ from operator import itemgetter
 mesh = "C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
        "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc"
 # var = input('Enter name of variable (zeta): ')
-var_name = 'windy'
+var_name = 'windx'
 
 t0 = time.time()
 
@@ -37,7 +37,7 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = input("Enter name of station file (Stations.txt): ")
-station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_Wright.txt"
+station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_CB.txt"
 stat_list = []
 stat_names = []
 with open(station, 'r') as f_st:
@@ -131,3 +131,5 @@ print(' ***** output ', round(t5 - t4, 3), 's')
 
 for i in range(len(stat_list)):
     print('Nodes nearest {} station are {}'.format(stat_names[i], ADJ[i]))
+
+# TT test push
