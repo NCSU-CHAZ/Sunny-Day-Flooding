@@ -6,7 +6,6 @@ Edited on Tue Oct 15 12:37:14 2019
 @author: agharag
 """
 
-# from tkinter.filedialog import askopenfilename
 from netCDF4 import Dataset
 import numpy as np
 import time
@@ -15,8 +14,11 @@ from operator import itemgetter
 
 ''' read mesh and element conn '''
 
-mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
-var = input('Enter name of variable (zeta): ')
+# mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
+mesh = "C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
+       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc"
+# var = input('Enter name of variable (zeta): ')
+var_name = 'windx'
 
 t0 = time.time()
 
@@ -24,7 +26,7 @@ ncf = Dataset(mesh, 'r')
 elem = ncf.variables['element'][:]
 xnode = ncf.variables['x'][:]
 ynode = ncf.variables['y'][:]
-var = ncf.variables[var][:]
+var = ncf.variables[var_name][:]
 N_ele = elem.shape[0]
 nt = var.shape[0]
 N_nod = len(xnode)
@@ -34,13 +36,16 @@ nodes = np.column_stack((xnode, ynode))
 
 ## read station list
 ## text file format: StationName Latitude Longgitude
-station = input("Enter name of station file (Stations.txt): ")
+# station = input("Enter name of station file (Stations.txt): ")
+station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_CB.txt"
 stat_list = []
+stat_names = []
 with open(station, 'r') as f_st:
-    f_st.readline()
+    #f_st.readline()
     for line in f_st:
         m = line.split()
         stat_list.append([float(m[1]), float(m[2])])  # add lat and long to list
+        stat_names.append(m[0])
 
 ''' find nearest triangles'''
 t2 = time.time()
@@ -64,7 +69,12 @@ print(' ***** found nearby elements in ', round(t3 - t2, 3), 's')
 GAMMA = []
 ADJ = []
 for i in range(len(stat_list)):
+    GAMMA.append(0)
+    ADJ.append(0) # we will assign these values later
+    Gtot_min = 100 # initialize value for Gtot error check
     xp, yp = stat_list[i]
+    print(stat_names[i])
+
     for j in triangles[i]:
         adjc = elem[j] - 1
         XX = [xp, xnode[adjc[0]], xnode[adjc[1]], xnode[adjc[2]]]
@@ -84,28 +94,42 @@ for i in range(len(stat_list)):
         G0 = Sub_Area(0, 2, 3) / Tot_A
         G1 = Sub_Area(1, 0, 3) / Tot_A
         G2 = Sub_Area(1, 2, 0) / Tot_A
+        Gtot = G0 + G1 + G2
+        Error_Gtot = abs(Gtot - 1)
+        Error_Gtot_min = abs(Gtot_min - 1)
 
-        if round(G0 + G1 + G2, 3) == 1.0:
-            print(G0 + G1 + G2)
-            GAMMA.append([G0, G1, G2])
-            ADJ.append(adjc)
+        if Error_Gtot < Error_Gtot_min:
+            Gtot_min = Gtot
+            print('Sum of G0 + G1 + G2 = {}'.format(Gtot_min))
+            GAMMA[i] = [G0, G1, G2]
+            ADJ[i] = adjc
 
-            break
 
 t4 = time.time()
 print(' ***** found exact element and weight function in ', round(t4 - t3, 3), 's')
+print("Gamma weighting array is {}".format(GAMMA))
+
+
 
 Stat_val = []
 ## output data
 for s in range(len(stat_list)):
-    G0, G1, G2 = GAMMA[s]
-    n0, n1, n2 = ADJ[s]
-    S = []
-    for t in range(nt):
-        mval = G0 * var[t][n0] + G1 * var[t][n1] + G2 * var[t][n2]
-        print(t, s, mval)
-        S.append(mval)
-    Stat_val.append(S)
+    with open("C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
+                   "/CarolinaBeach/Model_Inputs/ModelOutText/pullT_{}_{}.txt".format(stat_names[s],var_name), 'w',) as outFile:
+        G0, G1, G2 = GAMMA[s]
+        n0, n1, n2 = ADJ[s]
+        S = []
+        for t in range(nt):
+            mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
+            mval = mval/(G0 + G1 + G2) # adjust for weighting coefficients where G0+G1+G2 not exactly equal to zero
+            outFile.write("{} {}\n".format(t, mval))
+            S.append(mval)
+        Stat_val.append(S)
 
 t5 = time.time()
 print(' ***** output ', round(t5 - t4, 3), 's')
+
+for i in range(len(stat_list)):
+    print('Nodes nearest {} station are {}'.format(stat_names[i], ADJ[i]))
+
+# TT test push
