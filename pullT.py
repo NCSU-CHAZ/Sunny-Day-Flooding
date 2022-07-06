@@ -3,7 +3,7 @@
 Created on Fri Aug 03 18:28:43 2018
 Edited on Tue Oct 15 12:37:14 2019
 
-@author: agharag
+@author: agharag, ththelen
 """
 
 from netCDF4 import Dataset
@@ -15,10 +15,9 @@ from operator import itemgetter
 ''' read mesh and element conn '''
 
 # mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
-mesh = "C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
-       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc"
-# var = input('Enter name of variable (zeta): ')
-var_name = 'windx'
+mesh = input("Enter name of ADCIRC file (C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
+       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc): ")
+var_name = input('Enter name of variable (zeta): ')
 
 t0 = time.time()
 
@@ -36,8 +35,9 @@ nodes = np.column_stack((xnode, ynode))
 
 ## read station list
 ## text file format: StationName Latitude Longgitude
-# station = input("Enter name of station file (Stations.txt): ")
-station = "C:/Users/Thomas Thelen/OneDrive - North Carolina State University/CarolinaBeach/Model_Inputs/Stations_CB.txt"
+# station = 
+station = input("Enter name of station file (C:/Users/Thomas Thelen/OneDrive - North Carolina State" \
+                "University/CarolinaBeach/Model_Inputs/Stations_CB.txt): ") 
 stat_list = []
 stat_names = []
 with open(station, 'r') as f_st:
@@ -113,9 +113,10 @@ print("Gamma weighting array is {}".format(GAMMA))
 
 Stat_val = []
 ## output data
+outFileLocation = input("Enter repository path for output text files (C:/Users/Thomas Thelen/OneDrive - North Carolina State" \
+                "University/CarolinaBeach/ModelOutText): ") 
 for s in range(len(stat_list)):
-    with open("C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
-                   "/CarolinaBeach/Model_Inputs/ModelOutText/pullT_{}_{}.txt".format(stat_names[s],var_name), 'w',) as outFile:
+    with open("{}/pullT_{}_{}.txt".format(outFileLocation, stat_names[s],var_name), 'w',) as outFile:
         G0, G1, G2 = GAMMA[s]
         n0, n1, n2 = ADJ[s]
         S = []
