@@ -36,8 +36,8 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = 
-station = input("Enter name of station file (C:/Users/Thomas Thelen/OneDrive - North Carolina State" \
-                "University/CarolinaBeach/Model_Inputs/Stations_CB.txt): ") 
+station = input("Enter name of station file (C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
+                "/CarolinaBeach/Model_Inputs/Stations.txt): ")
 stat_list = []
 stat_names = []
 with open(station, 'r') as f_st:
@@ -113,8 +113,8 @@ print("Gamma weighting array is {}".format(GAMMA))
 
 Stat_val = []
 ## output data
-outFileLocation = input("Enter repository path for output text files (C:/Users/Thomas Thelen/OneDrive - North Carolina State" \
-                "University/CarolinaBeach/ModelOutText): ") 
+outFileLocation = input("Enter repository path for output text files (C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
+                        "/CarolinaBeach/Model_Inputs/ModelOutText): ")
 for s in range(len(stat_list)):
     with open("{}/pullT_{}_{}.txt".format(outFileLocation, stat_names[s],var_name), 'w',) as outFile:
         G0, G1, G2 = GAMMA[s]
@@ -132,5 +132,3 @@ print(' ***** output ', round(t5 - t4, 3), 's')
 
 for i in range(len(stat_list)):
     print('Nodes nearest {} station are {}'.format(stat_names[i], ADJ[i]))
-
-# TT test push
