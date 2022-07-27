@@ -15,7 +15,7 @@ from operator import itemgetter
 ''' read mesh and element conn '''
 
 # mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
-mesh = input("Enter name of ADCIRC file (C:/Users/Thomas Thelen/OneDrive - North Carolina State " \
+mesh = input("Enter name of ADCIRC file (C:/Users/ththelen/OneDrive - North Carolina State " \
        "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc): ")
 var_name = input('Enter name of variable (zeta): ')
 
@@ -36,7 +36,7 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = 
-station = input("Enter name of station file (C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
+station = input("Enter name of station file (C:/Users/ththelen/OneDrive - North Carolina State University"
                 "/CarolinaBeach/Model_Inputs/Stations.txt): ")
 stat_list = []
 stat_names = []
@@ -113,8 +113,8 @@ print("Gamma weighting array is {}".format(GAMMA))
 
 Stat_val = []
 ## output data
-outFileLocation = input("Enter repository path for output text files (C:/Users/Thomas Thelen/OneDrive - North Carolina State University"
-                        "/CarolinaBeach/Model_Inputs/ModelOutText): ")
+outFileLocation = input("Enter repository path for output text files (C:/Users/ththelen/OneDrive - North Carolina State University"
+                        "/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/pullT): ")
 for s in range(len(stat_list)):
     with open("{}/pullT_{}_{}.txt".format(outFileLocation, stat_names[s],var_name), 'w',) as outFile:
         G0, G1, G2 = GAMMA[s]
