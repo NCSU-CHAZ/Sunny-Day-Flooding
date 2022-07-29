@@ -11,12 +11,20 @@ import numpy as np
 import time
 from scipy import spatial
 from operator import itemgetter
+import os.path
+
+def pathChecker(prompt):
+    '''Takes a string prompt for path input and does not continue until path esits'''
+    inPath = input(prompt)
+    while os.path.exists(inPath) == False:
+        print("Oops, looks like your path name contained an error. Try again.")
+        inPath = input(prompt)
+    return(inPath)
 
 ''' read mesh and element conn '''
 
-# mesh = input("Enter name of ADCIRC file (fort.63.nc): ")
-mesh = input("Enter name of ADCIRC file (C:/Users/ththelen/OneDrive - North Carolina State " \
-       "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc): ")
+mesh = pathChecker("Enter name of ADCIRC file (C:/Users/ththelen/OneDrive - North Carolina State " \
+               "University/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/fort.74.nc): ")
 var_name = input('Enter name of variable (zeta): ')
 
 t0 = time.time()
@@ -36,7 +44,7 @@ nodes = np.column_stack((xnode, ynode))
 ## read station list
 ## text file format: StationName Latitude Longgitude
 # station = 
-station = input("Enter name of station file (C:/Users/ththelen/OneDrive - North Carolina State University"
+station = pathChecker("Enter name of station file (C:/Users/ththelen/OneDrive - North Carolina State University"
                 "/CarolinaBeach/Model_Inputs/Stations.txt): ")
 stat_list = []
 stat_names = []
@@ -113,7 +121,7 @@ print("Gamma weighting array is {}".format(GAMMA))
 
 Stat_val = []
 ## output data
-outFileLocation = input("Enter repository path for output text files (C:/Users/ththelen/OneDrive - North Carolina State University"
+outFileLocation = pathChecker("Enter repository path for output text files (C:/Users/ththelen/OneDrive - North Carolina State University"
                         "/CarolinaBeach/SMS/20220610_NC9_Nov2021/ADCIRC/pullT): ")
 for s in range(len(stat_list)):
     with open("{}/pullT_{}_{}.txt".format(outFileLocation, stat_names[s],var_name), 'w',) as outFile:
