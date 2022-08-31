@@ -132,6 +132,7 @@ for s in range(len(stat_list)):
             mval = G0 * var[t][n0].data + G1 * var[t][n1].data + G2 * var[t][n2].data #.data unmasks var vals
             mval = mval/(G0 + G1 + G2) # adjust for weighting coefficients where G0+G1+G2 not exactly equal to zero
             outFile.write("{},{}\n".format(t*3600, mval)) # outputs seconds,WL for each ADCIRC timestep
+            # outFile.write("{} {}\n".format(t, mval))  # outputs hours WL for each ADCIRC timestep. OG output
             S.append(mval)
         Stat_val.append(S)
 
