@@ -1,10 +1,24 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Aug 03 18:28:43 2018
-Edited on Tue Oct 15 12:37:14 2019
+'''
+Script: pullTime.py
+Author Git Handle: ththelen, agharag
+Date of Authorship: 2022.06.10
+Last Modified: Fall 2022
+Purpose: Return .txt file with ADCIRC outputs at user-provided station coordinates
 
-@author: agharag, ththelen
-"""
+Requirements:
+1. File path to ADCIRC output file
+2. Name of ADCIRC variable you want to pull time series
+    water level (zeta, m) - fort.63.nc
+    wind speed (windx/windy, m/s) - fort.74.nc
+    water velocity (u-vel/v-vel, m/s) - fort.64.nc
+3. File path with station names and decimal lat & long for each location where you
+want to pull ADCIRC data. One line for each station in the format below:
+    StationName Latitude Longitude
+4. Directory to store output .txt files with ADCIRC time series data
+
+Output: .txt output files have the following structure:
+    ACRCIRC_time_step, ADCIRC_data_value
+'''
 
 from netCDF4 import Dataset
 import numpy as np
@@ -43,7 +57,7 @@ nodes = np.column_stack((xnode, ynode))
 
 ## read station list
 ## text file format: StationName Latitude Longgitude
-# station = 
+# station =
 station = pathChecker("Enter name of station file (C:/Users/ththelen/OneDrive - North Carolina State University"
                 "/CarolinaBeach/Model_Inputs/Stations.txt): ")
 stat_list = []
@@ -58,7 +72,7 @@ with open(station, 'r') as f_st:
 ''' find nearest triangles'''
 t2 = time.time()
 
-### nearest k nodes to each station in stat_list 
+### nearest k nodes to each station in stat_list
 CKD = list(spatial.cKDTree(nodes).query(stat_list, k=4)[1])
 
 triangles = []
