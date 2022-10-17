@@ -16,9 +16,11 @@ import os.path
 def pathChecker(prompt):
     '''Takes a string prompt for path input and does not continue until path esits'''
     inPath = input(prompt)
+    inPath = inPath.strip('"')
     while os.path.exists(inPath) == False:
         print("Oops, looks like your path name contained an error. Try again.")
         inPath = input(prompt)
+        inPath = inPath.strip('"')
     return(inPath)
 
 ''' read mesh and element conn '''
