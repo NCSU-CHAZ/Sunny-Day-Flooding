@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+Script: 3Di BC Writer
+
 Created on Fri Aug 03 18:28:43 2018
 Edited on Tue Oct 15 12:37:14 2019
 
